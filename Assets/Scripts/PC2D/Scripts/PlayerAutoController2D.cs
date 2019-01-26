@@ -38,6 +38,12 @@ using CnControls;
             _motor.oneWayPlatformsAreWalls = _oneWayPlatformsAreWalls;
         }
 
+        public void Jump() {
+            _motor.Jump();
+            _motor.DisableRestrictedArea();
+            _motor.jumpingHeld = true;
+        }
+
         // Update is called once per frame
         void Update() {
             // use last state to restore some ladder specific values
@@ -46,14 +52,6 @@ using CnControls;
                 FreedomStateRestore(_motor);
             }
 
-            // Jump?
-            // If you want to jump in ladders, leave it here, otherwise move it down
-            if (CnInputManager.GetAxis("Jump") > 0f) {
-                _motor.Jump();
-                _motor.DisableRestrictedArea();
-            }
-
-            _motor.jumpingHeld = CnInputManager.GetAxis("Jump") > 0f;
             _motor.normalizedXMovement = PlayerMovement;
 
             /* // XY freedom movement

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InputEvaluator : MonoBehaviour {
+public class InputEvaluator {
     public enum InputButton {
         UNDEFINED,
         LEFT,
@@ -17,13 +17,6 @@ public class InputEvaluator : MonoBehaviour {
         DOWN
     }
 
-    private static InputEvaluator instance = null;
-
-    public static InputEvaluator Instance {
-        get {
-            return instance;
-        }
-    }
     public class InputSaver {
         public InputEvent ie;
         public InputButton ib;
@@ -35,84 +28,102 @@ public class InputEvaluator : MonoBehaviour {
             ts = stamp;
         }
     }
-    private List<InputSaver> inputs = new List<InputSaver>();
+    private List<InputSaver> inputs;
+    public List<InputSaver> Inputs {
+        get { return inputs; }
+        set { inputs = value; }
+    }
     private int replayIndex = -1;
     private float replayStartTs;
     private bool allFinished = false;
     private float originalStartTs = -1;
     public bool Replaying { get { return replayIndex >= 0 && !allFinished; } }
     public bool Ended { get { return allFinished; } }
-    [SerializeField]
-    private Image knob;
-    private Vector3 original;
+    public bool started = false;
+    public bool player = false;
 
-    void Awake() {
-        if (instance == null) {
-            instance = this;
-            original = knob.transform.position;
-        }
+    public GameObject instantiatedObject;
+    private PlayerController2D controller;
+
+    public void SetController(GameObject prefab) {
+        GameObject.Destroy(instantiatedObject);
+        instantiatedObject = GameObject.Instantiate(prefab);
+        controller = instantiatedObject.GetComponent<PlayerController2D>();
+        allFinished = false;
+        replayIndex = -1;
+        started = false;
     }
 
-    void OnDestroy() {
-        if (instance == this) instance = null;
+    public InputEvaluator(InputEvaluator other) {
+        inputs = other.Inputs;
+        player = false;
+    }
+
+    public InputEvaluator() {
+        inputs = new List<InputSaver>();
+        player = true;
     }
 
     public void StartReplay() {
         replayIndex = 0;
         replayStartTs = Time.time;
-        knob.transform.position = original;
         allFinished = false;
+        started = true;
+    }
+
+    public bool IsDead() {
+        return instantiatedObject.GetComponent<playerDeathLogic>().dying;
     }
 
     public void StartRecording() {
         originalStartTs = -1;
         replayIndex = -1;
-        knob.transform.position = original;
         inputs.Clear();
         allFinished = false;
+        originalStartTs = Time.time;
+        started = true;
     }
 
     public void EvaluateInput(InputButton button, InputEvent ievent) {
-        if (originalStartTs < 0)
-            originalStartTs = Time.time;
-        if (replayIndex >= 0) {
-            if (replayIndex < inputs.Count) {
-                InputSaver saver = inputs[replayIndex];
-                var ts = Time.time - replayStartTs;
-                Debug.Log("saver: " + replayIndex + " b: " + saver.ib + " e: " + saver.ie + " t: " + saver.ts + " other: " + ts);
-                if (ts >= saver.ts) {
-                    button = saver.ib;
-                    ievent = saver.ie;
-                    replayIndex++;
-                    //TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
-                } else
+        if (!player) {
+            if (!started) StartReplay();
+            if (replayIndex >= 0) {
+                if (replayIndex < inputs.Count) {
+                    InputSaver saver = inputs[replayIndex];
+                    var ts = Time.time - replayStartTs;
+                    if (ts >= saver.ts) {
+                        button = saver.ib;
+                        ievent = saver.ie;
+                        replayIndex++;
+                        SendMovementToController(button, ievent);
+                    } else
+                        return;
+                } else {
+                    allFinished = true;
                     return;
-            } else {
-                allFinished = true;
-                return;
+                }
             }
         } else {
+
             var ts = Time.time - originalStartTs;
-            Debug.Log("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
-            //TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
+            if (IsDead()) {
+                button = InputButton.UNDEFINED;
+                ievent = InputEvent.UP;
+            }
             inputs.Add(new InputSaver(button, ievent, ts));
+            SendMovementToController(button, ievent);
         }
-        var newPos = knob.transform.position;
-        if (ievent == InputEvent.DOWN) {
-            if (button == InputButton.LEFT)
-                newPos.x -= 10;
-            if (button == InputButton.RIGHT)
-                newPos.x += 10;
-        }
-        knob.transform.position = newPos;
     }
 
-    void Start() {
-
-    }
-
-    // Update is called once per frame
-    void Update() {
-
+    private void SendMovementToController(InputButton button, InputEvent ievent) {
+        controller.MoveLeft(false);
+        if (button == InputButton.RIGHT && ievent == InputEvent.DOWN)
+            controller.MoveRight(true);
+        if (button == InputButton.LEFT && ievent == InputEvent.DOWN)
+            controller.MoveLeft(true);
+        if (ievent == InputEvent.DOWN && button == InputButton.RIGHT && controller.MovingLeft())
+            controller.Jump();
+        if (ievent == InputEvent.DOWN && button == InputButton.LEFT && controller.MovingRight())
+            controller.Jump();
     }
 }

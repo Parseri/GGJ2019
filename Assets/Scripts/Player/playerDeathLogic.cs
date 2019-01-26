@@ -25,7 +25,6 @@ public class playerDeathLogic : MonoBehaviour {
             GameObject parent = GameObject.FindGameObjectWithTag("SplatParent");
             this.GetComponent<PlayerSplatterLogic>().SpawnChunkParticles(this.transform.position, Vector3.up, parent.transform);
             this.GetComponent<PlayerSplatterLogic>().Splatt(this.transform.position, other);
-            this.GetComponent<PlayerAutoController2D>().PlayerMovement = 0;
             this.GetComponent<PlatformerMotor2D>().enabled = false;
             this.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
             die();
@@ -34,7 +33,6 @@ public class playerDeathLogic : MonoBehaviour {
         if (other.tag.Equals("End") && dying == false) {
             float time = (this.GetComponent<PlayerLevelTimeLogic>().LevelTime - Time.timeSinceLevelLoad);
             this.GetComponent<PlayerLevelTimeLogic>().updateTime = false;
-            this.GetComponent<PlayerAutoController2D>().PlayerMovement = 0;
             NextScene();
         }
 
@@ -42,7 +40,7 @@ public class playerDeathLogic : MonoBehaviour {
 
     public void die() {
         dying = true;
-        this.GetComponent<PlayerAutoController2D>().enabled = false;
+        this.GetComponent<PlayerController2D>().enabled = false;
         restartCurrentScene();
        // AutoFade.FadeOut(Color.black, restartCurrentScene);	
     }
@@ -66,7 +64,7 @@ public class playerDeathLogic : MonoBehaviour {
     private IEnumerator ResetGame() {
         this.transform.GetChild(0).gameObject.SetActive(false);
         yield return new WaitForSecondsRealtime(2);
-        this.GetComponent<PlayerStartLogic>().onReset();
+        InputSystem.Instance.StartLevel();
     }
 
     private IEnumerator ReloadScene() {

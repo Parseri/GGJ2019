@@ -2239,9 +2239,6 @@ public class PlatformerMotor2D : MonoBehaviour
 
         if (HasFlag(CollidedSurface.Ground))
         {
-            float speed = this.GetComponent<PlayerAutoController2D>().PlayerMovement;
-            if (speed == -1) speed = 1;
-            this.GetComponent<PlayerAutoController2D>().PlayerMovement = speed;
             if (IsWallSliding() || _ignoreGravity)
             {
                 _velocity.y = 0;
