@@ -1,0 +1,270 @@
+fileFormatVersion: 2
+guid: a2e2d9280e5bded41935a70b452d1722
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Sprite_Johnny_Dick
+    21300002: Sprite_Johnny_Head
+    21300004: Sprite_Johnny_RightArm
+    21300006: Sprite_Johnny_LeftArm
+    21300008: Sprite_Johnny_RightFeet
+    21300010: Sprite_Johnny_LeftFeet
+    21300012: Sprite_Sally_RightTit
+    21300014: Sprite_Sally_LeftTit
+    21300016: Sprite_Sally_Head
+    21300018: Sprite_Sally_RightArm
+    21300020: Sprite_Sally_LeftArm
+    21300022: Sprite_Sally_RightLeg
+    21300024: Sprite_Sally_LeftLeg
+  externalObjects: {}
+  serializedVersion: 5
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 2
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 800
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 2
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: 12
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sprite_Sally_RightTit
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 1440
+        width: 99
+        height: 319
+      alignment: 9
+      pivot: {x: 0.5162445, y: 0.96899337}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12a2050ac8523a4439de46307404dc13
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_LeftTit
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 1440
+        width: 99
+        height: 319
+      alignment: 9
+      pivot: {x: 0.5050505, y: 0.96899337}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2707d4b0cd7755a46b8b1dae4722778a
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_Head
+      rect:
+        serializedVersion: 2
+        x: 442
+        y: 1068
+        width: 882
+        height: 944
+      alignment: 9
+      pivot: {x: 0.5, y: 0.003002878}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 18304f8655a54b640b4723644dac4df1
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_RightArm
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 821
+        width: 79
+        height: 457
+      alignment: 9
+      pivot: {x: 0.44388792, y: 0.94862044}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95a876b1f00555a4dab492c8a2026cf9
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_LeftArm
+      rect:
+        serializedVersion: 2
+        x: 241
+        y: 829
+        width: 79
+        height: 459
+      alignment: 9
+      pivot: {x: 0.4298598, y: 0.93942255}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bf47dc05c15f8f499f679fef92f74ca
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_RightLeg
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 198
+        width: 124
+        height: 544
+      alignment: 9
+      pivot: {x: 0.13357437, y: 0.962435}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6d1bce0c3e418f346b5f985e3b731b1e
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprite_Sally_LeftLeg
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 198
+        width: 124
+        height: 544
+      alignment: 9
+      pivot: {x: 0.16038612, y: 0.95428634}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95546f1110ef90b41b1c70990f134582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: c565de9f85f1e32489ae4e10896c98ef
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+  spritePackingTag: Player
+  userData: 636597444702217109
+  assetBundleName: 
+  assetBundleVariant: 
