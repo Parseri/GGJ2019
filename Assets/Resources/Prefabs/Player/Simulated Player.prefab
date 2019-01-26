@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 114371692204631718}
   - component: {fileID: 114044066843491280}
   - component: {fileID: 114989541853089048}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Simulated Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4570044521329848}
   - component: {fileID: 95766827312786742}
   - component: {fileID: 212424881883110004}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

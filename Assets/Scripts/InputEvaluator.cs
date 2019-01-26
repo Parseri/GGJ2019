@@ -127,6 +127,7 @@ public class InputEvaluator {
                     }
                 } else {
                     allFinished = true;
+                    instantiatedObject.layer = LayerMask.NameToLayer("Corpses");
                     ResetMovement();
                     return;
                 }
