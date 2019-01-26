@@ -10,8 +10,18 @@ public class PlayerSplatterLogic : MonoBehaviour {
     public ParticleSystem chunkParticles;
     public LayerMask CollisionLayer;
 
-    public void Splatt( Vector3 Position, Collider2D other) {
 
+    public void GenerateSplatter(Vector3 Position) {
+        RaycastHit2D hit = Physics2D.CircleCast(Position, 3, Vector2.up, Mathf.Infinity, CollisionLayer);
+        if (hit) {
+            int k = Random.Range(2, 4);
+            for (int i = 0; i < k; i++) {
+                Instantiate(_splatter, Position + new Vector3(Random.Range(0, 1), 0, 0), Quaternion.identity);
+            }
+        }
+    }
+
+    public void Splatt( Vector3 Position, Collider2D other) {
         if (other.tag == "Enemy") {
             Debug.Log("ENEMY");
             Splatter splat = Instantiate(DynamicSplatter, Position, Quaternion.identity);

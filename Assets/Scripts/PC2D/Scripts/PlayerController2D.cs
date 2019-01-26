@@ -34,11 +34,23 @@ public class PlayerController2D : MonoBehaviour {
         _motor.enableOneWayPlatforms = _enableOneWayPlatforms;
         _motor.oneWayPlatformsAreWalls = _oneWayPlatformsAreWalls;
     }
+    public void SetVelocity(Vector2 vel) {
+        _motor.velocity = vel;
+    }
 
-    public void Jump() {
-        _motor.Jump();
-        _motor.DisableRestrictedArea();
-        _motor.jumpingHeld = true;
+    public Vector2 GetVelocity() {
+        return _motor.velocity;
+    }
+
+    public bool ShouldSaveTransform() {
+        return _motor.IsOnGround();
+    }
+    public void Jump(bool down) {
+        if (down) {
+            _motor.Jump();
+            _motor.DisableRestrictedArea();
+        }
+        _motor.jumpingHeld = down;
     }
 
     // Update is called once per frame
@@ -105,6 +117,7 @@ public class PlayerController2D : MonoBehaviour {
 
     internal void StopMovement() {
         _motor.normalizedXMovement = 0;
+        _motor.jumpingHeld = false;
     }
 
     internal void MoveLeft() {

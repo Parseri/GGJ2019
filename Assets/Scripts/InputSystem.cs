@@ -49,7 +49,10 @@ public class InputSystem : MonoBehaviour {
     }
 
     public void StartLevel() {
+        bool newPlayer = false;
         if (playerEvaluator != null) {
+            newPlayer = true;
+            playerEvaluator.DestroyOldObject();
             evaluators.Add(new InputEvaluator(playerEvaluator));
             Debug.Log("New evaluator");
         }
@@ -61,6 +64,12 @@ public class InputSystem : MonoBehaviour {
         }
     }
 
+    public void SuicidePressed() {
+        if (playerEvaluator == null) return;
+        playerEvaluator.ResetMovement();
+        playerEvaluator.EvaluateInput(InputEvaluator.InputButton.SUICIDE, InputEvaluator.InputEvent.DOWN);
+    }
+
     void Update() {
         if (updateTime && levelTimeText != null) {
             var levelTime = Time.timeSinceLevelLoad - startTime;
@@ -70,13 +79,14 @@ public class InputSystem : MonoBehaviour {
         if (!playerEvaluator.started) playerEvaluator.StartRecording();
         playerEvaluator.ResetMovement();
         foreach (var ev in evaluators) {
+            ev.ResetMovement();
             ev.EvaluateInput(InputEvaluator.InputButton.UNDEFINED, InputEvaluator.InputEvent.UNDEFINED);
         }
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(1) || Input.GetMouseButton(1)) {
             playerEvaluator.EvaluateInput(InputEvaluator.InputButton.JUMP, InputEvaluator.InputEvent.DOWN);
         }
-        if (Input.GetMouseButtonUp(0)) {
+        if (Input.GetMouseButtonUp(1)) {
             playerEvaluator.EvaluateInput(InputEvaluator.InputButton.JUMP, InputEvaluator.InputEvent.UP);
         }
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)) {// || Input.GetMouseButton(0)) {

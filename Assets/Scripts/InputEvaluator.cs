@@ -22,11 +22,24 @@ public class InputEvaluator {
         public InputEvent ie;
         public InputButton ib;
         public float ts;
+        public Vector3 pos;
+        public Quaternion rot;
+        public bool hasTrans;
 
         public InputSaver(InputButton bu, InputEvent ev, float stamp) {
             ie = ev;
             ib = bu;
             ts = stamp;
+            hasTrans = false;
+        }
+
+        public InputSaver(InputButton bu, InputEvent ev, float stamp, Vector3 p, Quaternion r) {
+            ie = ev;
+            ib = bu;
+            ts = stamp;
+            pos = p;
+            rot = r;
+            hasTrans = true;
         }
     }
     private List<InputSaver> inputs;
@@ -46,10 +59,16 @@ public class InputEvaluator {
     public GameObject instantiatedObject;
     private PlayerController2D controller;
 
+
+    public void DestroyOldObject() {
+        GameObject.Destroy(instantiatedObject);
+    }
+
     public void SetController(GameObject prefab) {
         GameObject.Destroy(instantiatedObject);
         instantiatedObject = GameObject.Instantiate(prefab);
         controller = instantiatedObject.GetComponent<PlayerController2D>();
+        instantiatedObject.layer = LayerMask.NameToLayer("Default");
         allFinished = false;
         replayIndex = -1;
         started = false;
@@ -57,6 +76,7 @@ public class InputEvaluator {
 
     public InputEvaluator(InputEvaluator other) {
         inputs = other.Inputs;
+        Debug.Log("frames: " + inputs.Count);
         player = false;
     }
 
@@ -90,15 +110,21 @@ public class InputEvaluator {
             if (!started) StartReplay();
             if (replayIndex >= 0) {
                 if (replayIndex < inputs.Count) {
-                    InputSaver saver = inputs[replayIndex];
-                    var ts = Time.time - replayStartTs;
-                    if (ts >= saver.ts) {
-                        button = saver.ib;
-                        ievent = saver.ie;
-                        replayIndex++;
-                        SendMovementToController(button, ievent);
-                    } else
-                        return;
+                    for (int i = replayIndex; i < inputs.Count; ++i) {
+                        InputSaver saver = inputs[replayIndex];
+                        var ts = Time.time - replayStartTs;
+                        if (ts >= saver.ts) {
+                            button = saver.ib;
+                            ievent = saver.ie;
+                            replayIndex++;
+                            if (saver.hasTrans) {
+                                instantiatedObject.transform.position = Vector3.Lerp(instantiatedObject.transform.position, saver.pos, 0.1f);
+                                instantiatedObject.transform.rotation = Quaternion.Lerp(instantiatedObject.transform.rotation, saver.rot, 0.1f);
+                            }
+                            SendMovementToController(button, ievent);
+                        } else
+                            return;
+                    }
                 } else {
                     allFinished = true;
                     ResetMovement();
@@ -112,7 +138,12 @@ public class InputEvaluator {
                 ResetMovement();
                 return;
             }
-            inputs.Add(new InputSaver(button, ievent, ts));
+            Debug.Log("adding more inputs: " + button.ToString() + ", event: " + ievent + ", ts: " + ts);
+            Transform trans = instantiatedObject.transform;
+            if (controller.ShouldSaveTransform())
+                inputs.Add(new InputSaver(button, ievent, ts, trans.position, trans.rotation));
+            else
+                inputs.Add(new InputSaver(button, ievent, ts));
             SendMovementToController(button, ievent);
         }
     }
@@ -122,15 +153,22 @@ public class InputEvaluator {
     }
 
     private void SendMovementToController(InputButton button, InputEvent ievent) {
-        if (button == InputButton.JUMP && ievent == InputEvent.DOWN)
-            controller.Jump();
+        if (button == InputButton.SUICIDE) {
+            if (player) {
+                GameObject parent = GameObject.FindGameObjectWithTag("SplatParent");
+                instantiatedObject.GetComponent<PlayerSplatterLogic>().SpawnChunkParticles(instantiatedObject.transform.position, Vector3.up, parent.transform);
+                instantiatedObject.GetComponent<playerDeathLogic>().die();
+            }
+        }
+        if (button == InputButton.JUMP)
+            controller.Jump(ievent == InputEvent.DOWN);
         if (button == InputButton.RIGHT && ievent == InputEvent.DOWN)
             controller.MoveRight();
         if (button == InputButton.LEFT && ievent == InputEvent.DOWN)
             controller.MoveLeft();
         if (ievent == InputEvent.DOWN && button == InputButton.RIGHT && controller.MovingLeft())
-            controller.Jump();
+            controller.Jump(true);
         if (ievent == InputEvent.DOWN && button == InputButton.LEFT && controller.MovingRight())
-            controller.Jump();
+            controller.Jump(true);
     }
 }

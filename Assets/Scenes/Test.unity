@@ -145,6 +145,8 @@ MonoBehaviour:
   simulatedObjectPrefab: {fileID: 1555991246729354, guid: 5a77255aa8da0e744b0c98f2e0988368,
     type: 2}
   levelTimeText: {fileID: 1149069258}
+  updateTime: 0
+  startTime: 0
 --- !u!4 &1227651
 Transform:
   m_ObjectHideFlags: 0
@@ -6564,10 +6566,10 @@ RectTransform:
   m_Father: {fileID: 1322974209}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
-  m_SizeDelta: {x: 96, y: 96}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -312.4, y: 153.5}
+  m_SizeDelta: {x: 636.7, y: 144.5}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1707042137
 MonoBehaviour:
@@ -6619,8 +6621,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707042137}
-        m_MethodName: RestartScene
+      - m_Target: {fileID: 1227650}
+        m_MethodName: SuicidePressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
