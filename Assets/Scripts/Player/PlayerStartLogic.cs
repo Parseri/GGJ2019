@@ -9,10 +9,8 @@ public class PlayerStartLogic : MonoBehaviour {
     private bool simulated = false;
     // Use this for initialization
     void Start() {
-        if (!simulated) {
-            GameObject start = GameObject.FindGameObjectWithTag("Start");
-            this.transform.position = start.transform.position + new Vector3(0, 1, 0);
-        }
+        GameObject start = GameObject.FindGameObjectWithTag("Start");
+        this.transform.position = start.transform.position + new Vector3(0, 1, 0);
         StartCoroutine(wait());
     }
 
