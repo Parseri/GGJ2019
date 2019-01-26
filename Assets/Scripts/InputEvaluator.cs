@@ -38,8 +38,10 @@ public class InputEvaluator : MonoBehaviour {
     private List<InputSaver> inputs = new List<InputSaver>();
     private int replayIndex = -1;
     private float replayStartTs;
+    private bool allFinished = false;
     private float originalStartTs = -1;
-    public bool Replaying { get { return replayIndex >= 0; } }
+    public bool Replaying { get { return replayIndex >= 0 && !allFinished; } }
+    public bool Ended { get { return allFinished; } }
     [SerializeField]
     private Image knob;
     private Vector3 original;
@@ -59,6 +61,15 @@ public class InputEvaluator : MonoBehaviour {
         replayIndex = 0;
         replayStartTs = Time.time;
         knob.transform.position = original;
+        allFinished = false;
+    }
+
+    public void StartRecording() {
+        originalStartTs = -1;
+        replayIndex = -1;
+        knob.transform.position = original;
+        inputs.Clear();
+        allFinished = false;
     }
 
     public void EvaluateInput(InputButton button, InputEvent ievent) {
@@ -73,19 +84,17 @@ public class InputEvaluator : MonoBehaviour {
                     button = saver.ib;
                     ievent = saver.ie;
                     replayIndex++;
-                    TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
+                    //TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
                 } else
                     return;
             } else {
-                replayIndex = -1;
-                knob.transform.position = original;
-                inputs.Clear();
-                originalStartTs = Time.time;
+                allFinished = true;
                 return;
             }
         } else {
             var ts = Time.time - originalStartTs;
-            TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
+            Debug.Log("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
+            //TestingUI.Instance.AddLogging("button: " + button.ToString() + " event: " + ievent.ToString() + " ts: " + ts);
             inputs.Add(new InputSaver(button, ievent, ts));
         }
         var newPos = knob.transform.position;
