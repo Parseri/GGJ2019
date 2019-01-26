@@ -68,7 +68,6 @@ public class InputEvaluator {
         GameObject.Destroy(instantiatedObject);
         instantiatedObject = GameObject.Instantiate(prefab);
         controller = instantiatedObject.GetComponent<PlayerController2D>();
-        instantiatedObject.layer = LayerMask.NameToLayer("Default");
         allFinished = false;
         replayIndex = -1;
         started = false;
