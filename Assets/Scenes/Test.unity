@@ -144,6 +144,7 @@ MonoBehaviour:
     type: 2}
   simulatedObjectPrefab: {fileID: 1555991246729354, guid: 5a77255aa8da0e744b0c98f2e0988368,
     type: 2}
+  levelTimeText: {fileID: 1149069258}
 --- !u!4 &1227651
 Transform:
   m_ObjectHideFlags: 0

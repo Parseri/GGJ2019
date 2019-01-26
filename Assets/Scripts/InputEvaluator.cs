@@ -8,7 +8,8 @@ public class InputEvaluator {
         UNDEFINED,
         LEFT,
         RIGHT,
-        SUICIDE
+        SUICIDE,
+        JUMP
     }
 
     public enum InputEvent {
@@ -100,6 +101,7 @@ public class InputEvaluator {
                         return;
                 } else {
                     allFinished = true;
+                    ResetMovement();
                     return;
                 }
             }
@@ -107,20 +109,25 @@ public class InputEvaluator {
 
             var ts = Time.time - originalStartTs;
             if (IsDead()) {
-                button = InputButton.UNDEFINED;
-                ievent = InputEvent.UP;
+                ResetMovement();
+                return;
             }
             inputs.Add(new InputSaver(button, ievent, ts));
             SendMovementToController(button, ievent);
         }
     }
 
+    public void ResetMovement() {
+        controller.StopMovement();
+    }
+
     private void SendMovementToController(InputButton button, InputEvent ievent) {
-        controller.MoveLeft(false);
+        if (button == InputButton.JUMP && ievent == InputEvent.DOWN)
+            controller.Jump();
         if (button == InputButton.RIGHT && ievent == InputEvent.DOWN)
-            controller.MoveRight(true);
+            controller.MoveRight();
         if (button == InputButton.LEFT && ievent == InputEvent.DOWN)
-            controller.MoveLeft(true);
+            controller.MoveLeft();
         if (ievent == InputEvent.DOWN && button == InputButton.RIGHT && controller.MovingLeft())
             controller.Jump();
         if (ievent == InputEvent.DOWN && button == InputButton.LEFT && controller.MovingRight())

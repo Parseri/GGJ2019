@@ -24,7 +24,6 @@ GameObject:
   - component: {fileID: 114887083098947406}
   - component: {fileID: 114030818746387744}
   - component: {fileID: 114371692204631718}
-  - component: {fileID: 114822986931570212}
   - component: {fileID: 114044066843491280}
   - component: {fileID: 114989541853089048}
   m_Layer: 0
@@ -184,20 +183,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   simulated: 1
---- !u!114 &114822986931570212
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1555991246729354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dc896abf3e14da46aa593903234eed5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  respawnTo: {x: 0, y: 0, z: 0}
-  dying: 0
-  DeathEffect: {fileID: 0}
 --- !u!114 &114887083098947406
 MonoBehaviour:
   m_ObjectHideFlags: 1

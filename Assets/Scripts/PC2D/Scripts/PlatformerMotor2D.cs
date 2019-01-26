@@ -2087,7 +2087,6 @@ public class PlatformerMotor2D : MonoBehaviour
             {
                 // If jump was pressed as we or before we entered the wall then just jump away.
                 _velocity = _wallJumpVector * CalculateSpeedNeeded(_jumping.height) * wallJumpMultiplier;
-                this.GetComponent<PlayerAutoController2D>().PlayerMovement = 1f;
 
                 // It's likely the player is still pressing into the wall, ignore movement for a little amount of time.
                 // TODO: Only ignore left movement?
@@ -2107,7 +2106,6 @@ public class PlatformerMotor2D : MonoBehaviour
             {
 
                 _velocity = _wallJumpVector * CalculateSpeedNeeded(_jumping.height) * wallJumpMultiplier;
-                this.GetComponent<PlayerAutoController2D>().PlayerMovement = -1f;
                 _velocity.x *= -1;
 
                 _ignoreMovementFrames = GetFrameCount(ignoreMovementAfterJump);
@@ -2212,16 +2210,6 @@ public class PlatformerMotor2D : MonoBehaviour
 
             if (IsWallSticking())
             {
-                if (PressingIntoLeftWall() && motorState == PlatformerMotor2D.MotorState.WallSticking) {
-                    this.GetComponent<PlayerAutoController2D>().PlayerMovement = -1f;
-                    Debug.Log("left wall");
-                }
-
-                if (PressingIntoRightWall() && motorState == PlatformerMotor2D.MotorState.WallSticking) {
-                    this.GetComponent<PlayerAutoController2D>().PlayerMovement = 1f;
-                    Debug.Log("right wall");
-                }
-
                 if (!_isValidWallInteraction || !(PressingIntoLeftWall() || PressingIntoRightWall()))
                 {
                     ChangeState(MotorState.Falling);

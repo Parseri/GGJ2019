@@ -42,7 +42,7 @@ public class PlayerController2D : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void Update() {
         // use last state to restore some ladder specific values
         if (_motor.motorState != PlatformerMotor2D.MotorState.FreedomState) {
             // try to restore, sometimes states are a bit messy because change too much in one frame
@@ -103,10 +103,14 @@ public class PlayerController2D : MonoBehaviour {
         return _motor.normalizedXMovement > 0;
     }
 
-    internal void MoveLeft(bool move) {
-        _motor.normalizedXMovement = move ? -1 : 0;
+    internal void StopMovement() {
+        _motor.normalizedXMovement = 0;
     }
-    internal void MoveRight(bool move) {
-        _motor.normalizedXMovement = move ? 1 : 0;
+
+    internal void MoveLeft() {
+        _motor.normalizedXMovement = -1;
+    }
+    internal void MoveRight() {
+        _motor.normalizedXMovement = 1;
     }
 }

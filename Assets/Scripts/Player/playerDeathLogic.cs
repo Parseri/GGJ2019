@@ -31,8 +31,7 @@ public class playerDeathLogic : MonoBehaviour {
         }
 
         if (other.tag.Equals("End") && dying == false) {
-            float time = (this.GetComponent<PlayerLevelTimeLogic>().LevelTime - Time.timeSinceLevelLoad);
-            this.GetComponent<PlayerLevelTimeLogic>().updateTime = false;
+            InputSystem.Instance.updateTime = false;
             NextScene();
         }
 
@@ -55,6 +54,7 @@ public class playerDeathLogic : MonoBehaviour {
 
     private IEnumerator NextScenetus() {
         this.transform.GetChild(0).gameObject.SetActive(false);
+        InputSystem.Instance.ResetSystem();
         yield return new WaitForSecondsRealtime(1);
         int scene = SceneManager.GetActiveScene().buildIndex+1;
         if (scene >= SceneManager.sceneCountInBuildSettings) scene = 0;
