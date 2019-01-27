@@ -55,10 +55,14 @@ public class InputEvaluator {
     public bool Ended { get { return allFinished; } }
     public bool started = false;
     public bool player = false;
-
+    bool jumped = false;
+    bool suicide = false;
+    public int leftClicked;
+    public int rightClicked;
+    public float rotateToZeroTimer = -1;
     public GameObject instantiatedObject;
     private PlayerController2D controller;
-
+    Vector3 currentAngle;
 
     public void DestroyOldObject() {
         GameObject.Destroy(instantiatedObject);
@@ -89,6 +93,7 @@ public class InputEvaluator {
         replayStartTs = Time.time;
         allFinished = false;
         started = true;
+        rotateToZeroTimer = -1;
     }
 
     public bool IsDead() {
@@ -104,6 +109,16 @@ public class InputEvaluator {
         started = true;
     }
 
+    public void DoRotation() {
+        rotateToZeroTimer += Time.deltaTime;
+        Transform obj = instantiatedObject.transform.Find("Visual");
+        if (obj != null) {
+            currentAngle = new Vector3(0, 0, Mathf.LerpAngle(currentAngle.z, 0, Time.deltaTime * 10f));
+            obj.eulerAngles = currentAngle;
+        }
+
+    }
+
     public void EvaluateInput(InputButton button, InputEvent ievent) {
         if (!player) {
             if (!started) StartReplay();
@@ -113,6 +128,12 @@ public class InputEvaluator {
                         InputSaver saver = inputs[replayIndex];
                         var ts = Time.time - replayStartTs;
                         if (ts >= saver.ts) {
+                            if (suicide) {
+                                Transform obj = instantiatedObject.transform.Find("Visual");
+                                if (obj != null && rotateToZeroTimer < 0) {
+                                    FreezeObject(obj);
+                                }
+                            }
                             button = saver.ib;
                             ievent = saver.ie;
                             replayIndex++;
@@ -127,29 +148,55 @@ public class InputEvaluator {
                 } else {
                     allFinished = true;
                     instantiatedObject.layer = LayerMask.NameToLayer("Corpses");
-                    ResetMovement();
+                    Transform obj = instantiatedObject.transform.Find("Visual");
+                    if (obj != null && rotateToZeroTimer < 0) {
+                        FreezeObject(obj);
+                    }
+                    //ResetMovement();
                     return;
                 }
             }
         } else {
-
             var ts = Time.time - originalStartTs;
             if (IsDead()) {
                 ResetMovement();
                 return;
             }
-            Debug.Log("adding more inputs: " + button.ToString() + ", event: " + ievent + ", ts: " + ts);
-            Transform trans = instantiatedObject.transform;
-            if (controller.ShouldSaveTransform())
-                inputs.Add(new InputSaver(button, ievent, ts, trans.position, trans.rotation));
-            else
-                inputs.Add(new InputSaver(button, ievent, ts));
-            SendMovementToController(button, ievent);
+            if (!suicide) {
+                Debug.Log("adding more inputs: " + button.ToString() + ", event: " + ievent + ", ts: " + ts);
+                Transform trans = instantiatedObject.transform;
+                if (controller.ShouldSaveTransform())
+                    inputs.Add(new InputSaver(button, ievent, ts, trans.position, trans.rotation));
+                else
+                    inputs.Add(new InputSaver(button, ievent, ts));
+                SendMovementToController(button, ievent);
+            }
         }
+    }
+
+    private void FreezeObject(Transform obj) {
+        Animator anim = obj.gameObject.GetComponent<Animator>();
+        anim.enabled = false;
+        SpriteRenderer spr = obj.gameObject.GetComponent<SpriteRenderer>();
+        obj.gameObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+        spr.sprite = InputSystem.Instance.ripImage;
+        instantiatedObject.GetComponent<PlatformerMotor2D>().enabled = false;
+        var logic = instantiatedObject.GetComponent<playerDeathLogic>();
+        if (logic != null)
+            logic.die();
+        instantiatedObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        instantiatedObject.GetComponent<BoxCollider2D>().offset = new Vector2(-0.02102852f, 0.004440784f);
+        instantiatedObject.GetComponent<BoxCollider2D>().size = new Vector2(1.098045f, 1.91923f);
+        rotateToZeroTimer = 0;
+        currentAngle = obj.gameObject.transform.rotation.eulerAngles;
+        instantiatedObject.GetComponent<PC2D.PlatformerAnimation2D>().enabled = false;
     }
 
     public void ResetMovement() {
         controller.StopMovement();
+        controller.Jump(false);
+        leftClicked = 0;
+        rightClicked = 0;
     }
 
     private void SendMovementToController(InputButton button, InputEvent ievent) {
@@ -157,18 +204,29 @@ public class InputEvaluator {
             if (player) {
                 GameObject parent = GameObject.FindGameObjectWithTag("SplatParent");
                 instantiatedObject.GetComponent<PlayerSplatterLogic>().SpawnChunkParticles(instantiatedObject.transform.position, Vector3.up, parent.transform);
+                instantiatedObject.GetComponent<PlatformerMotor2D>().enabled = false;
+                instantiatedObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
                 instantiatedObject.GetComponent<playerDeathLogic>().die();
+                suicide = true;
             }
         }
         if (button == InputButton.JUMP)
             controller.Jump(ievent == InputEvent.DOWN);
-        if (button == InputButton.RIGHT && ievent == InputEvent.DOWN)
+        if (button == InputButton.RIGHT && ievent == InputEvent.DOWN) {
             controller.MoveRight();
-        if (button == InputButton.LEFT && ievent == InputEvent.DOWN)
+            rightClicked++;
+        }
+        if (button == InputButton.LEFT && ievent == InputEvent.DOWN) {
             controller.MoveLeft();
-        if (ievent == InputEvent.DOWN && button == InputButton.RIGHT && controller.MovingLeft())
+            leftClicked++;
+        }
+        if (leftClicked > 0 && rightClicked > 0) {
             controller.Jump(true);
-        if (ievent == InputEvent.DOWN && button == InputButton.LEFT && controller.MovingRight())
-            controller.Jump(true);
+            jumped = true;
+            if (leftClicked > rightClicked)
+                controller.MoveLeft();
+            else
+                controller.MoveRight();
+        }
     }
 }

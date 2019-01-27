@@ -14,6 +14,8 @@ public class InputSystem : MonoBehaviour {
     public bool updateTime = false;
     public float startTime;
 
+    public Sprite ripImage;
+
     private static InputSystem instance;
 
     public static InputSystem Instance { get { return instance; } }
@@ -49,9 +51,7 @@ public class InputSystem : MonoBehaviour {
     }
 
     public void StartLevel() {
-        bool newPlayer = false;
         if (playerEvaluator != null) {
-            newPlayer = true;
             playerEvaluator.DestroyOldObject();
             evaluators.Add(new InputEvaluator(playerEvaluator));
             Debug.Log("New evaluator");
@@ -79,10 +79,15 @@ public class InputSystem : MonoBehaviour {
         if (!playerEvaluator.started) playerEvaluator.StartRecording();
         playerEvaluator.ResetMovement();
         foreach (var ev in evaluators) {
+            if (ev.rotateToZeroTimer >= 0) ev.DoRotation();
             ev.ResetMovement();
             ev.EvaluateInput(InputEvaluator.InputButton.UNDEFINED, InputEvaluator.InputEvent.UNDEFINED);
         }
 #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKey(KeyCode.RightArrow))
+            playerEvaluator.EvaluateInput(InputEvaluator.InputButton.RIGHT, InputEvaluator.InputEvent.DOWN);
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKey(KeyCode.LeftArrow))
+            playerEvaluator.EvaluateInput(InputEvaluator.InputButton.LEFT, InputEvaluator.InputEvent.DOWN);
         if (Input.GetMouseButtonDown(1) || Input.GetMouseButton(1)) {
             playerEvaluator.EvaluateInput(InputEvaluator.InputButton.JUMP, InputEvaluator.InputEvent.DOWN);
         }
