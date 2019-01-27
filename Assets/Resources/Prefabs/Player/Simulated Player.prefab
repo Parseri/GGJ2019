@@ -263,7 +263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staticEnvLayerMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   envCheckDistance: 0.08
   minDistanceFromEnv: 0.04
   numOfIterations: 2

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InputSystem : MonoBehaviour {
@@ -9,7 +10,7 @@ public class InputSystem : MonoBehaviour {
     [SerializeField]
     private GameObject simulatedObjectPrefab;
     private bool runState = false;
-
+    public Text prevLevelTimeText;
     public Text levelTimeText;
     public bool updateTime = false;
     public float startTime;
@@ -70,6 +71,17 @@ public class InputSystem : MonoBehaviour {
         playerEvaluator.EvaluateInput(InputEvaluator.InputButton.SUICIDE, InputEvaluator.InputEvent.DOWN);
     }
 
+    public void RestartPressed() {
+        if (playerEvaluator == null) return;
+        int scene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(scene, LoadSceneMode.Single);
+    }
+
+    public void SetLastTime() {
+        var levelTime = Time.timeSinceLevelLoad - startTime;
+        prevLevelTimeText.text = "Previous time: " + levelTime.ToString("F2");
+    }
+
     void Update() {
         if (updateTime && levelTimeText != null) {
             var levelTime = Time.timeSinceLevelLoad - startTime;
@@ -126,6 +138,7 @@ public class InputSystem : MonoBehaviour {
             }
         }
 #endif
+        playerEvaluator.EvaluateAllInputs();
     }
 }
 

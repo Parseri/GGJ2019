@@ -32,6 +32,7 @@ public class playerDeathLogic : MonoBehaviour {
 
         if (other.tag.Equals("End") && dying == false) {
             InputSystem.Instance.updateTime = false;
+            InputSystem.Instance.SetLastTime();
             NextScene();
         }
 
@@ -56,6 +57,7 @@ public class playerDeathLogic : MonoBehaviour {
         this.transform.GetChild(0).gameObject.SetActive(false);
         InputSystem.Instance.ResetSystem();
         yield return new WaitForSecondsRealtime(1);
+        GameObject.Destroy(GameObject.Find("InputSystem"));
         int scene = SceneManager.GetActiveScene().buildIndex+1;
         if (scene >= SceneManager.sceneCountInBuildSettings) scene = 0;
         SceneManager.LoadScene(scene, LoadSceneMode.Single);

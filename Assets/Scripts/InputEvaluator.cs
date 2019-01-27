@@ -142,8 +142,10 @@ public class InputEvaluator {
                                 instantiatedObject.transform.rotation = Quaternion.Lerp(instantiatedObject.transform.rotation, saver.rot, 0.1f);
                             }
                             SendMovementToController(button, ievent);
-                        } else
+                        } else {
+                            EvaluateAllInputs();
                             return;
+                        }
                     }
                 } else {
                     allFinished = true;
@@ -213,20 +215,34 @@ public class InputEvaluator {
         if (button == InputButton.JUMP)
             controller.Jump(ievent == InputEvent.DOWN);
         if (button == InputButton.RIGHT && ievent == InputEvent.DOWN) {
-            controller.MoveRight();
             rightClicked++;
         }
         if (button == InputButton.LEFT && ievent == InputEvent.DOWN) {
-            controller.MoveLeft();
             leftClicked++;
         }
+    }
+
+    public void EvaluateAllInputs() {
         if (leftClicked > 0 && rightClicked > 0) {
             controller.Jump(true);
             jumped = true;
-            if (leftClicked > rightClicked)
+            if (leftClicked == rightClicked) {
+                if (controller.MovingLeft())
+                    controller.MoveLeft();
+                else
+                    controller.MoveRight();
+            } else if (leftClicked > rightClicked)
                 controller.MoveLeft();
             else
                 controller.MoveRight();
+        } else {
+            if (rightClicked == leftClicked)
+                controller.StopMovement();
+            else if (rightClicked > leftClicked) {
+                controller.MoveRight();
+            } else {
+                controller.MoveLeft();
+            }
         }
     }
 }
